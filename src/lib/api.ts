@@ -1,4 +1,13 @@
-const API_URL = 'http://localhost:3002/api';
+const getBaseUrl = () => {
+    // If running on Capacitor (native), use the host IP for the emulator
+    // On Android emulator, 10.0.2.2 points to host machine localhost
+    if (typeof window !== 'undefined' && (window as any).Capacitor?.getPlatform() === 'android') {
+        return 'http://10.0.2.2:3002/api';
+    }
+    return 'http://localhost:3002/api';
+};
+
+const API_URL = getBaseUrl();
 
 const getHeaders = () => {
     const token = localStorage.getItem('token');
