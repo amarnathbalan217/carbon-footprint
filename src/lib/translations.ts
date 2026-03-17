@@ -1,0 +1,230 @@
+export type Language = 'en' | 'ml';
+
+export const translations = {
+  en: {
+    nav: {
+      dashboard: 'Dashboard',
+      activity: 'Add Activity',
+      goals: 'Goals',
+      insights: 'Insights',
+      profile: 'Profile',
+      admin: 'Admin Panel',
+      logout: 'Logout'
+    },
+    dashboard: {
+      title: 'Current Footprint',
+      subtitle: 'Your carbon impact this month',
+      tons: 'tons CO2',
+      comparison: 'vs last month',
+      activities: 'Recent Activities',
+      noActivities: 'No activities recorded yet.'
+    },
+    activity: {
+      title: 'Log Your Activity',
+      subtitle: 'Track your daily activities to monitor your carbon footprint',
+      selectCat: 'Select Category',
+      transport: 'Transport',
+      energy: 'Energy',
+      lpg: 'LPG',
+      food: 'Food',
+      vehicleType: 'Vehicle Type',
+      fuelType: 'Fuel Type',
+      distance: 'Distance (km)',
+      energyUsage: 'Energy Usage (kWh)',
+      lpgUsage: 'LPG Usage (kg)',
+      mealType: 'Meal Type',
+      estimated: 'Estimated CO₂ Emissions',
+      logBtn: 'Log Activity',
+      success: 'Activity logged successfully!',
+      error: 'Failed to log activity',
+      vehicleYear: 'Vehicle Year'
+    },
+    goals: {
+      title: 'Carbon Reduction Goals',
+      subtitle: 'Set targets and track your progress toward a greener lifestyle',
+      activeGoals: 'Active Goals',
+      setNew: 'Set New Goal',
+      goalTitle: 'Goal Title',
+      category: 'Category',
+      target: 'Target (tons CO₂)',
+      deadline: 'Deadline',
+      createBtn: 'Create Goal',
+      clearBtn: 'Clear Goals',
+      noGoals: 'No active goals. Set a new goal to get started!',
+      complete: 'Complete',
+      current: 'Current',
+      due: 'Due'
+    },
+    insights: {
+      title: 'Actionable Insights',
+      subtitle: 'Smart recommendations based on your activity patterns',
+      highImpact: 'High Impact Areas',
+      tips: 'Personalized Tips',
+      efficiency: 'Efficiency Metrics',
+      recommendations: 'Recommendations'
+    },
+    chatbot: {
+      welcome: "Hello! I'm your AI Carbon Tracker assistant. I can help you understand your carbon footprint, give you tips to reduce emissions, or answer any climate-related questions. How can I help you today?",
+      placeholder: 'Ask me anything...',
+      suggested: 'Suggested Topics',
+      error: 'Failed to connect AI. Please check your key in Profile > AI Settings.'
+    },
+    profile: {
+      title: 'Account Settings',
+      subtitle: 'Manage your profile, data, and application preferences',
+      sections: {
+        profile: 'Profile Settings',
+        preferences: 'Preferences',
+        notifications: 'Notifications',
+        privacy: 'Privacy & Security',
+        ai: 'AI Settings'
+      },
+      info: 'Profile Information',
+      fullName: 'Full Name',
+      email: 'Email',
+      location: 'Location',
+      householdSize: 'Household Size',
+      trackerPrefs: 'Tracker Preferences',
+      primaryVehicle: 'Primary Vehicle',
+      homeType: 'Home Type',
+      lang: 'Application Language',
+      displayPrefs: 'Display Preferences',
+      weeklySummary: 'Show weekly carbon summaries',
+      darkMode: 'Enable Dark Mode',
+      notifSettings: 'Notification Settings',
+      updatePassword: 'Update Password',
+      newPassword: 'New Password',
+      confirmPassword: 'Confirm New Password',
+      passPlaceholder: 'Min. 6 characters',
+      passRepeat: 'Repeat your new password',
+      aiConfig: 'AI Assistant Configuration',
+      aiGlobal: 'Configure the AI Assistant with your API key and preferred model.',
+      apiKey: 'Gemini API Key',
+      aiModel: 'AI Model',
+      updateApiKey: 'Update AI Settings',
+      passLong: 'Password must be at least 6 characters',
+      passMatch: 'Passwords do not match',
+      passFields: 'Please fill in both password fields'
+    },
+    common: {
+      save: 'Save Changes',
+      cancel: 'Cancel',
+      loading: 'Loading...',
+      success: 'Settings updated successfully',
+      error: 'Failed to update settings'
+    }
+  },
+  ml: {
+    nav: {
+      dashboard: 'ഡാഷ്‌ബോർഡ്',
+      activity: 'വിവരങ്ങൾ ചേർക്കുക',
+      goals: 'ലക്ഷ്യങ്ങൾ',
+      insights: 'നിരീക്ഷണങ്ങൾ',
+      profile: 'പ്രൊഫൈൽ',
+      admin: 'അഡ്മിൻ പാനൽ',
+      logout: 'പുറത്തുകടക്കുക'
+    },
+    dashboard: {
+      title: 'നിലവിലെ കാർബൺ അളവ്',
+      subtitle: 'ഈ മാസത്തെ നിങ്ങളുടെ കാർബൺ പ്രഭാവം',
+      tons: 'ടൺ CO2',
+      comparison: 'കഴിഞ്ഞ മാസത്തെ അപേക്ഷിച്ച്',
+      activities: 'അടുത്തിടെയുള്ള പ്രവർത്തനങ്ങൾ',
+      noActivities: 'വിവരങ്ങൾ ഒന്നും രേഖപ്പെടുത്തിയിട്ടില്ല.'
+    },
+    activity: {
+      title: 'വിവരങ്ങൾ ചേർക്കുക',
+      subtitle: 'നിങ്ങളുടെ ദൈനംദിന പ്രവർത്തനങ്ങൾ രേഖപ്പെടുത്തുക',
+      selectCat: 'വിഭാഗം തിരഞ്ഞെടുക്കുക',
+      transport: 'യാത്ര',
+      energy: 'ഊർജ്ജം',
+      lpg: 'എൽ.പി.ജി (LPG)',
+      food: 'ഭക്ഷണം',
+      vehicleType: 'വാഹനത്തിന്റെ തരം',
+      fuelType: 'ഇന്ധനത്തിന്റെ തരം',
+      distance: 'ദൂരം (കി.മീ)',
+      energyUsage: 'വൈദ്യുതി ഉപയോഗം (kWh)',
+      lpgUsage: 'എൽ.പി.ജി ഉപയോഗം (kg)',
+      mealType: 'ഭക്ഷണ രീതി',
+      estimated: 'സാധ്യമായ കാർബൺ അളവ്',
+      logBtn: 'വിവരങ്ങൾ ചേർക്കുക',
+      success: 'വിവരങ്ങൾ വിജയകരമായി ചേർത്തു!',
+      error: 'വിവരങ്ങൾ ചേർക്കാൻ കഴിഞ്ഞില്ല',
+      vehicleYear: 'വാഹനത്തിന്റെ വർഷം'
+    },
+    goals: {
+      title: 'കാർബൺ കുറയ്ക്കാനുള്ള ലക്ഷ്യങ്ങൾ',
+      subtitle: 'പരിസ്ഥിതി സൗഹൃദ ജീവിതത്തിനായി ലക്ഷ്യങ്ങൾ നിശ്ചയിക്കുക',
+      activeGoals: 'നിലവിലെ ലക്ഷ്യങ്ങൾ',
+      setNew: 'പുതിയ ലക്ഷ്യം നിശ്ചയിക്കുക',
+      goalTitle: 'ലക്ഷ്യം',
+      category: 'വിഭാഗം',
+      target: 'ലക്ഷ്യം (ടൺ CO₂)',
+      deadline: 'സമയപരിധി',
+      createBtn: 'ലക്ഷ്യം നിശ്ചയിക്കുക',
+      clearBtn: 'ലക്ഷ്യങ്ങൾ മാറ്റുക',
+      noGoals: 'ലക്ഷ്യങ്ങളൊന്നും നിശ്ചയിച്ചിട്ടില്ല. പുതിയ ലക്ഷ്യം നിശ്ചയിച്ചു തുടങ്ങൂ!',
+      complete: 'പൂർത്തിയായി',
+      current: 'നിലവിൽ',
+      due: 'അവസാന തീയതി'
+    },
+    insights: {
+      title: 'നിരീക്ഷണങ്ങൾ',
+      subtitle: 'നിങ്ങളുടെ ഉപയോഗത്തിന് അനുസരിച്ചുള്ള നിർദ്ദേശങ്ങൾ',
+      highImpact: 'കൂടുതൽ ശ്രദ്ധിക്കേണ്ട മേഖലകൾ',
+      tips: 'നിങ്ങൾക്കായുള്ള നിർദ്ദേശങ്ങൾ',
+      efficiency: 'കാര്യക്ഷമത',
+      recommendations: 'ശുപാർശകൾ'
+    },
+    chatbot: {
+      welcome: "ഹലോ! ഞാൻ നിങ്ങളുടെ AI കാർബൺ ട്രാക്കർ അസിസ്റ്റന്റാണ്. നിങ്ങളുടെ കാർബൺ അളവ് മനസ്സിലാക്കാനും അത് കുറയ്ക്കാനുള്ള വഴികൾ പറഞ്ഞുതരാനും എനിക്ക് കഴിയും. ഇന്ന് ഞാൻ നിങ്ങളെ എങ്ങനെ സഹായിക്കണം?",
+      placeholder: 'ചോദിക്കൂ...',
+      suggested: 'പ്രധാന വിഷയങ്ങൾ',
+      error: 'AI ബന്ധിപ്പിക്കുന്നതിൽ പരാജയപ്പെട്ടു. പ്രൊഫൈൽ > AI ക്രമീകരണങ്ങളിൽ നിങ്ങളുടെ കീ പരിശോധിക്കുക.'
+    },
+    profile: {
+      title: 'അക്കൗണ്ട് ക്രമീകരണങ്ങൾ',
+      subtitle: 'നിങ്ങളുടെ പ്രൊഫൈലും ക്രമീകരണങ്ങളും മാറ്റുക',
+      sections: {
+        profile: 'പ്രൊഫൈൽ ക്രമീകരണങ്ങൾ',
+        preferences: 'മുൻഗണനകൾ',
+        notifications: 'അറിയിപ്പുകൾ',
+        privacy: 'സ്വകാര്യതയും സുരക്ഷയും',
+        ai: 'AI ക്രമീകരണങ്ങൾ'
+      },
+      info: 'പ്രൊഫൈൽ വിവരങ്ങൾ',
+      fullName: 'പൂർണ്ണനാമം',
+      email: 'ഇമെയിൽ',
+      location: 'സ്ഥലം',
+      householdSize: 'കുടുംബാംഗങ്ങൾ',
+      trackerPrefs: 'ട്രാക്കർ മുൻഗണനകൾ',
+      primaryVehicle: 'പ്രധാന വാഹനം',
+      homeType: 'വീടിന്റെ തരം',
+      lang: 'ഭാഷ ക്രമീകരണം',
+      displayPrefs: 'ഡിസ്പ്ലേ വിവരങ്ങൾ',
+      weeklySummary: 'ആഴ്ചയിലെ വിവരങ്ങൾ കാണിക്കുക',
+      darkMode: 'ഡാർക്ക് മോഡ് ഓണാക്കുക',
+      notifSettings: 'അറിയിപ്പുകൾ സജ്ജീകരിക്കുക',
+      updatePassword: 'പാസ്സ്‌വേർഡ് മാറ്റുക',
+      newPassword: 'പുതിയ പാസ്സ്‌വേർഡ്',
+      confirmPassword: 'പാസ്സ്‌വേർഡ് വീണ്ടും നൽകുക',
+      passPlaceholder: 'കുറഞ്ഞത് 6 അക്ഷരങ്ങൾ',
+      passRepeat: 'പുതിയ പാസ്സ്‌വേർഡ് വീണ്ടും നൽകുക',
+      aiConfig: 'AI അസിസ്റ്റന്റ് ക്രമീകരണങ്ങൾ',
+      aiGlobal: 'AI അസിസ്റ്റന്റിനായുള്ള API കീയും മോഡലും സജ്ജീകരിക്കുക.',
+      apiKey: 'Gemini API കീ',
+      aiModel: 'AI മോഡൽ',
+      updateApiKey: 'AI ക്രമീകരണങ്ങൾ സേവ് ചെയ്യുക',
+      passLong: 'പാസ്സ്‌വേർഡിന് കുറഞ്ഞത് 6 അക്ഷരങ്ങൾ വേണം',
+      passMatch: 'പാസ്സ്‌വേർഡുകൾ ഒരേപോലെയല്ല',
+      passFields: 'രണ്ട് പാസ്സ്‌വേർഡ് ബോക്സുകളും പൂരിപ്പിക്കുക'
+    },
+    common: {
+      save: 'സേവ് ചെയ്യുക',
+      cancel: 'റദ്ദാക്കുക',
+      loading: 'കാത്തിരിക്കൂ...',
+      success: 'വിവരങ്ങൾ സംരക്ഷിച്ചു',
+      error: 'വിവരങ്ങൾ സംരക്ഷിക്കാൻ കഴിഞ്ഞില്ല'
+    }
+  }
+};

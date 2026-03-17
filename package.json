@@ -15,6 +15,7 @@
     "mobile:run": "npx cap run android"
   },
   "dependencies": {
+    "@google/genai": "^1.45.0",
     "@supabase/supabase-js": "^2.87.1",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import { Auth } from './components/Auth';
 import { AdminLogin } from './components/AdminLogin';
@@ -9,11 +9,19 @@ import { Goals } from './components/Goals';
 import { Insights } from './components/Insights';
 import { Profile } from './components/Profile';
 import { AdminDashboard } from './components/AdminDashboard';
+import { Chatbot } from './components/Chatbot';
 
 function App() {
   const { user, loading, isAdmin } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [loginRole, setLoginRole] = useState<'user' | 'admin'>('user');
+
+  useEffect(() => {
+    const theme = localStorage.getItem('theme');
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    }
+  }, []);
 
   if (loading) {
     return (
@@ -33,7 +41,14 @@ function App() {
 
   const renderContent = () => {
     if (isAdmin) {
-      return <AdminDashboard />;
+      switch (activeTab) {
+        case 'dashboard':
+          return <AdminDashboard />;
+        case 'profile':
+          return <Profile />;
+        default:
+          return <AdminDashboard />;
+      }
     }
 
     switch (activeTab) {
@@ -44,7 +59,7 @@ function App() {
       case 'goals':
         return <Goals />;
       case 'insights':
-        return <Insights />;
+        return <Insights onSwitchTab={setActiveTab} />;
       case 'profile':
         return <Profile />;
       default:
@@ -53,11 +68,12 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 safe-padding-top safe-padding-bottom">
+    <div className="min-h-screen bg-gray-50 dark:bg-black transition-colors duration-300">
       <Header activeTab={activeTab} setActiveTab={setActiveTab} isAdmin={isAdmin} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {renderContent()}
       </main>
+      <Chatbot />
     </div>
   );
 }

@@ -1,13 +1,4 @@
-const getBaseUrl = () => {
-    // If running on Capacitor (native), use the host IP for the emulator
-    // On Android emulator, 10.0.2.2 points to host machine localhost
-    if (typeof window !== 'undefined' && (window as any).Capacitor?.getPlatform() === 'android') {
-        return 'http://10.0.2.2:3002/api';
-    }
-    return 'http://localhost:3002/api';
-};
-
-const API_URL = getBaseUrl();
+const API_URL = 'http://localhost:3002/api';
 
 const getHeaders = () => {
     const token = localStorage.getItem('token');
@@ -64,6 +55,15 @@ export const api = {
                 body: JSON.stringify(data),
             });
             if (!res.ok) throw new Error('Failed to update profile');
+            return res.json();
+        },
+        updatePassword: async (password: string) => {
+            const res = await fetch(`${API_URL}/auth/password`, {
+                method: 'PUT',
+                headers: getHeaders(),
+                body: JSON.stringify({ password }),
+            });
+            if (!res.ok) throw new Error('Failed to update password');
             return res.json();
         },
     },

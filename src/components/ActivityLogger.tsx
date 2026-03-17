@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Car, Home, UtensilsCrossed, Plus, Flame, Loader2, ArrowRightLeft } from 'lucide-react';
 import { api } from '../lib/api';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const KM_TO_MILES = 0.621371;
 
 export const ActivityLogger: React.FC = () => {
+  const { t: globalT } = useLanguage();
+  const t = globalT.activity;
+  
   const [selectedCategory, setSelectedCategory] = useState('transport');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,11 +37,10 @@ export const ActivityLogger: React.FC = () => {
   }, []);
 
   const categories = [
-
-    { id: 'transport', label: 'Transport', icon: Car, color: 'bg-blue-500' },
-    { id: 'energy', label: 'Energy', icon: Home, color: 'bg-red-500' },
-    { id: 'lpg', label: 'LPG', icon: Flame, color: 'bg-orange-500' },
-    { id: 'food', label: 'Food', icon: UtensilsCrossed, color: 'bg-green-500' },
+    { id: 'transport', label: t.transport, icon: Car, color: 'bg-blue-500' },
+    { id: 'energy', label: t.energy, icon: Home, color: 'bg-red-500' },
+    { id: 'lpg', label: t.lpg, icon: Flame, color: 'bg-orange-500' },
+    { id: 'food', label: t.food, icon: UtensilsCrossed, color: 'bg-green-500' },
   ];
 
   const handleInputChange = (field: string, value: string) => {
@@ -65,7 +68,6 @@ export const ActivityLogger: React.FC = () => {
           factor = getFactor('transport', formData.vehicle);
         }
 
-        // Granular Year factor
         const year = parseInt(formData.year) || new Date().getFullYear();
         if (year < 2000) factor *= 1.3;
         else if (year < 2005) factor *= 1.2;
@@ -101,7 +103,7 @@ export const ActivityLogger: React.FC = () => {
 
       switch (selectedCategory) {
         case 'transport':
-          value = parseFloat(formData.distance) || 0; // value in km
+          value = parseFloat(formData.distance) || 0;
           subcategory = formData.vehicle;
           break;
         case 'energy':
@@ -113,7 +115,7 @@ export const ActivityLogger: React.FC = () => {
           subcategory = 'lpg';
           break;
         case 'food':
-          value = 1; // 1 meal
+          value = 1;
           subcategory = formData.meal;
           break;
       }
@@ -132,9 +134,8 @@ export const ActivityLogger: React.FC = () => {
         date: new Date().toISOString()
       });
 
-      setSuccess('Activity logged successfully!');
+      setSuccess(t.success);
 
-      // Reset relevant form fields
       setFormData(prev => ({
         ...prev,
         distance: '',
@@ -145,7 +146,7 @@ export const ActivityLogger: React.FC = () => {
       }));
 
     } catch (err: any) {
-      setError(err.message || 'Failed to log activity');
+      setError(err.message || t.error);
     } finally {
       setLoading(false);
     }
@@ -157,11 +158,11 @@ export const ActivityLogger: React.FC = () => {
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Vehicle Type</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.vehicleType}</label>
               <select
                 value={formData.vehicle}
                 onChange={(e) => handleInputChange('vehicle', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 <option value="car">Car</option>
                 <option value="bus">Public Bus</option>
@@ -170,11 +171,11 @@ export const ActivityLogger: React.FC = () => {
             </div>
             {formData.vehicle === 'car' && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Fuel Type</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.fuelType}</label>
                 <select
                   value={formData.fuelType}
                   onChange={(e) => handleInputChange('fuelType', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="petrol">Petrol</option>
                   <option value="diesel">Diesel</option>
@@ -184,49 +185,48 @@ export const ActivityLogger: React.FC = () => {
               </div>
             )}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Distance (km)</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.distance}</label>
               <input
                 type="number"
                 value={formData.distance}
                 onChange={(e) => handleInputChange('distance', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 placeholder="Enter distance in kilometers"
               />
             </div>
             {parseFloat(formData.distance) > 0 && (
-              <div className="mt-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="mt-3 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                 <div className="flex items-center space-x-2 mb-3">
-                  <ArrowRightLeft className="h-4 w-4 text-blue-600" />
-                  <span className="text-sm font-semibold text-blue-800">Distance & Emission Calculation</span>
+                  <ArrowRightLeft className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                  <span className="text-sm font-semibold text-blue-800 dark:text-blue-200">Distance & Emission Calculation</span>
                 </div>
-                <div className="space-y-2 text-sm">
+                <div className="space-y-2 text-sm dark:text-gray-300">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Distance entered:</span>
-                    <span className="font-medium text-gray-900">{parseFloat(formData.distance).toFixed(2)} km</span>
+                    <span className="text-gray-600 dark:text-gray-400">Distance entered:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{parseFloat(formData.distance).toFixed(2)} km</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Equivalent in miles:</span>
-                    <span className="font-medium text-gray-900">{(parseFloat(formData.distance) * KM_TO_MILES).toFixed(2)} miles</span>
+                    <span className="text-gray-600 dark:text-gray-400">Equivalent in miles:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{(parseFloat(formData.distance) * KM_TO_MILES).toFixed(2)} miles</span>
                   </div>
-                  <hr className="border-blue-200" />
+                  <hr className="border-blue-200 dark:border-blue-800" />
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Vehicle:</span>
-                    <span className="font-medium text-gray-900 capitalize">{formData.vehicle}{formData.vehicle === 'car' ? ` (${formData.fuelType})` : ''}</span>
+                    <span className="text-gray-600 dark:text-gray-400">Vehicle:</span>
+                    <span className="font-medium text-gray-900 dark:text-white capitalize">{formData.vehicle}{formData.vehicle === 'car' ? ` (${formData.fuelType})` : ''}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">CO₂ Emissions:</span>
-                    <span className="font-bold text-emerald-700">{calculateEmissions()} tons</span>
+                    <span className="text-gray-600 dark:text-gray-400">CO₂ Emissions:</span>
+                    <span className="font-bold text-emerald-700 dark:text-emerald-400">{calculateEmissions()} tons</span>
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Formula: {parseFloat(formData.distance).toFixed(2)} km × emission factor × year adjustment</p>
                 </div>
               </div>
             )}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Vehicle Year</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.vehicleYear}</label>
               <select
                 value={formData.year}
                 onChange={(e) => handleInputChange('year', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 {Array.from({ length: 40 }, (_, i) => new Date().getFullYear() - i).map(year => (
                   <option key={year} value={year}>{year}</option>
@@ -238,12 +238,12 @@ export const ActivityLogger: React.FC = () => {
       case 'energy':
         return (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Energy Usage (kWh)</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.energyUsage}</label>
             <input
               type="number"
               value={formData.energy}
               onChange={(e) => handleInputChange('energy', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               placeholder="Enter energy consumption"
             />
           </div>
@@ -251,12 +251,12 @@ export const ActivityLogger: React.FC = () => {
       case 'lpg':
         return (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">LPG Usage (kg)</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.lpgUsage}</label>
             <input
               type="number"
               value={formData.lpg}
               onChange={(e) => handleInputChange('lpg', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               placeholder="Enter LPG consumption in kilograms"
             />
           </div>
@@ -264,11 +264,11 @@ export const ActivityLogger: React.FC = () => {
       case 'food':
         return (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Meal Type</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.mealType}</label>
             <select
               value={formData.meal}
               onChange={(e) => handleInputChange('meal', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
             >
               <option value="beef">Beef</option>
               <option value="chicken">Chicken</option>
@@ -286,13 +286,13 @@ export const ActivityLogger: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900">Log Your Activity</h2>
-        <p className="text-gray-600 mt-2">Track your daily activities to monitor your carbon footprint</p>
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white">{t.title}</h2>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">{t.subtitle}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Category</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t.selectCat}</h3>
           <div className="space-y-3">
             {categories.map((category) => {
               const Icon = category.icon;
@@ -301,14 +301,14 @@ export const ActivityLogger: React.FC = () => {
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
                   className={`w-full flex items-center space-x-3 p-4 rounded-lg border transition-all duration-200 ${selectedCategory === category.id
-                    ? 'border-emerald-500 bg-emerald-50 text-emerald-700'
-                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400'
+                    : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                     }`}
                 >
                   <div className={`p-2 ${category.color} rounded-lg`}>
                     <Icon className="h-5 w-5 text-white" />
                   </div>
-                  <span className="font-medium">{category.label}</span>
+                  <span className="font-medium dark:text-gray-200">{category.label}</span>
                 </button>
               );
             })}
@@ -316,16 +316,16 @@ export const ActivityLogger: React.FC = () => {
         </div>
 
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6">
-              Log {categories.find(c => c.id === selectedCategory)?.label} Activity
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+              Log {categories.find(c => c.id === selectedCategory)?.label}
             </h3>
 
             {renderForm()}
 
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+            <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-700">Estimated CO₂ Emissions:</span>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t.estimated}:</span>
                 <span className="text-lg font-bold text-emerald-600">
                   {calculateEmissions()} tons
                 </span>
@@ -333,13 +333,13 @@ export const ActivityLogger: React.FC = () => {
             </div>
 
             {error && (
-              <div className="mt-4 p-4 bg-red-50 text-red-700 rounded-lg text-sm">
+              <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-lg text-sm border border-red-100 dark:border-red-800">
                 {error}
               </div>
             )}
 
             {success && (
-              <div className="mt-4 p-4 bg-green-50 text-green-700 rounded-lg text-sm">
+              <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-lg text-sm border border-green-100 dark:border-green-800">
                 {success}
               </div>
             )}
@@ -354,7 +354,7 @@ export const ActivityLogger: React.FC = () => {
               ) : (
                 <>
                   <Plus className="h-5 w-5" />
-                  <span>Log Activity</span>
+                  <span>{t.logBtn}</span>
                 </>
               )}
             </button>

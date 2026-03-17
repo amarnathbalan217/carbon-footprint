@@ -203,6 +203,21 @@ router.put('/auth/profile', authenticateToken, async (req: any, res) => {
     }
 });
 
+router.put('/auth/password', authenticateToken, async (req: any, res) => {
+    try {
+        const { password } = req.body;
+        const db = getDb();
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await db.run(
+            'UPDATE users SET password = ? WHERE id = ?',
+            [hashedPassword, req.user.id]
+        );
+        res.json({ success: true, message: 'Password updated successfully' });
+    } catch (error: any) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Activity Routes
 router.get('/activities', authenticateToken, async (req: any, res) => {
     try {
@@ -218,11 +233,20 @@ router.get('/activities', authenticateToken, async (req: any, res) => {
 });
 
 router.post('/activities/clear', authenticateToken, async (req: any, res) => {
-    console.log('POST /activities/clear request received', req.user.id);
+    console.log('POST /activities/clear request received (clearing activities and travel)', req.user.id);
     try {
         const db = getDb();
-        await db.run('DELETE FROM activities WHERE user_id = ?', [req.user.id]);
-        res.json({ message: 'All activities cleared' });
+        await db.exec('BEGIN TRANSACTION');
+        try {
+            await db.run('DELETE FROM activities WHERE user_id = ?', [req.user.id]);
+            await db.run('DELETE FROM travel_segments WHERE user_id = ?', [req.user.id]);
+            await db.exec('COMMIT');
+            res.json({ message: 'All activities and travel history cleared' });
+        } catch (err: any) {
+            await db.exec('ROLLBACK');
+            throw err;
+        }
+
     } catch (error: any) {
         res.status(500).json({ error: error.message });
     }

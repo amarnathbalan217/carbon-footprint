@@ -5,8 +5,11 @@ import { EmissionsChart } from './EmissionsChart';
 import { CategoryBreakdown } from './CategoryBreakdown';
 import { RecentActivity } from './RecentActivity';
 import { api } from '../lib/api';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const Dashboard: React.FC = () => {
+  const { t: globalT } = useLanguage();
+  const t = globalT.dashboard;
   const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [timeView, setTimeView] = useState<'day' | 'month' | 'year'>('month');
@@ -135,19 +138,19 @@ export const Dashboard: React.FC = () => {
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-900">Carbon Footprint Dashboard</h2>
-          <p className="text-gray-600 mt-1">Track your environmental impact in real-time</p>
+        <div className="dark:text-white">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">{t.title}</h2>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">{t.subtitle}</p>
         </div>
         <div className="mt-4 sm:mt-0 flex items-center space-x-2">
-          <div className="flex bg-gray-100 p-1 rounded-lg">
+          <div className="flex bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
             {(['day', 'month', 'year'] as const).map((view) => (
               <button
                 key={view}
                 onClick={() => setTimeView(view)}
                 className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all ${timeView === view
-                  ? 'bg-white text-emerald-600 shadow-sm'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'bg-white dark:bg-gray-900 text-emerald-600 shadow-sm'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white'
                   }`}
               >
                 {view.toUpperCase()}
@@ -159,42 +162,42 @@ export const Dashboard: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         <StatsCard
-          title={timeView === 'day' ? "Today" : timeView === 'month' ? "This Month" : "This Year"}
-          value={`${chartData[chartData.length - 1].value.toFixed(3)} tons CO₂`}
+          title={timeView === 'day' ? "Today" : timeView === 'month' ? t.title : "This Year"}
+          value={`${chartData[chartData.length - 1].value.toFixed(3)} ${t.tons}`}
           change={timeView === 'month' ? percentageChange : 0}
-          icon={<div className="p-2 bg-emerald-100 rounded-lg">💨</div>}
+          icon={<div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">💨</div>}
         />
         <StatsCard
           title="Total Lifetime"
-          value={`${totalEmissions.toFixed(3)} tons CO₂`}
+          value={`${totalEmissions.toFixed(3)} ${t.tons}`}
           change={0}
-          icon={<div className="p-2 bg-blue-100 rounded-lg">📅</div>}
+          icon={<div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">📅</div>}
         />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Emissions Over Time</h3>
-            <span className="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded capitalize">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Emissions Over Time</h3>
+            <span className="text-xs font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded capitalize">
               {timeView} View
             </span>
           </div>
           <EmissionsChart data={chartData} target={chartTarget} />
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-900 mb-6">Category Breakdown</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Category Breakdown</h3>
           <CategoryBreakdown categories={categories} />
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 border border-gray-100 dark:border-gray-800">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t.activities}</h3>
           <button
             onClick={handleClearActivities}
-            className="text-sm text-red-600 hover:text-red-700 font-medium hover:bg-red-50 px-3 py-1 rounded-md transition-colors"
+            className="text-sm text-red-600 hover:text-red-700 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-1 rounded-md transition-colors"
           >
             Clear History
           </button>

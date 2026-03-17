@@ -15,6 +15,13 @@ export const initDb = async () => {
     driver: sqlite3.Database
   });
 
+  // Optimize SQLite for performance (especially for OneDrive/Synchronized folders)
+  await db.exec('PRAGMA journal_mode = WAL');
+  await db.exec('PRAGMA synchronous = NORMAL');
+  await db.exec('PRAGMA cache_size = -2000');
+  await db.exec('PRAGMA temp_store = MEMORY');
+
+
   await db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -76,6 +83,11 @@ export const initDb = async () => {
        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
        FOREIGN KEY(user_id) REFERENCES users(id)
     );
+
+    CREATE INDEX IF NOT EXISTS idx_activities_user ON activities(user_id);
+    CREATE INDEX IF NOT EXISTS idx_travel_segments_user ON travel_segments(user_id);
+    CREATE INDEX IF NOT EXISTS idx_goals_user ON goals(user_id);
+
 
     CREATE TABLE IF NOT EXISTS emission_factors (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
