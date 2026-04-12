@@ -1,9 +1,10 @@
-const API_URL = 'http://localhost:3002/api';
+const API_URL = ' https://kathrin-paternal-goniometrically.ngrok-free.dev /api';
 
 const getHeaders = () => {
     const token = localStorage.getItem('token');
     return {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
 };
@@ -13,7 +14,7 @@ export const api = {
         register: async (data: any) => {
             const res = await fetch(`${API_URL}/auth/register`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
                 body: JSON.stringify(data),
             });
             if (!res.ok) {
@@ -23,23 +24,30 @@ export const api = {
             return res.json();
         },
         login: async (data: any) => {
-            const res = await fetch(`${API_URL}/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-            if (!res.ok) {
-                let errorMessage = 'Login failed';
-                try {
-                    const errorData = await res.json();
-                    errorMessage = errorData.error || errorMessage;
-                } catch (e) {
-                    const text = await res.text();
-                    errorMessage = text || `Error ${res.status}: ${res.statusText}`;
+            try {
+                const res = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+                    body: JSON.stringify(data),
+                });
+                if (!res.ok) {
+                    let errorMessage = 'Login failed';
+                    try {
+                        const errorData = await res.json();
+                        errorMessage = errorData.error || errorMessage;
+                    } catch (e) {
+                        const text = await res.text();
+                        errorMessage = text || `Error ${res.status}: ${res.statusText}`;
+                    }
+                    throw new Error(errorMessage);
                 }
-                throw new Error(errorMessage);
+                return res.json();
+            } catch (err: any) {
+                if (err.message === 'Failed to fetch') {
+                    throw new Error(`Failed to connect to ${API_URL}. Check your Wi-Fi or Firewall.`);
+                }
+                throw err;
             }
-            return res.json();
         },
         getProfile: async () => {
             const res = await fetch(`${API_URL}/auth/me`, {

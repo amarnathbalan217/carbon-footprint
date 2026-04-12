@@ -139,12 +139,74 @@ export const initDb = async () => {
     ('transport', 'motorbike', 0.0000932, 'tons/km'),
     ('energy', 'electricity', 0.0004, 'tons/kWh'),
     ('lpg', 'lpg', 0.003, 'tons/kg'),
-    ('food', 'beef', 0.0070, 'tons/meal'),
-    ('food', 'chicken', 0.0015, 'tons/meal'),
-    ('food', 'fish', 0.0013, 'tons/meal'),
-    ('food', 'vegetarian', 0.0005, 'tons/meal'),
-    ('food', 'vegan', 0.0004, 'tons/meal');
-  `);
+    ('food', 'beef', 0.0270, 'tons/kg'),
+    ('food', 'lamb', 0.0245, 'tons/kg'),
+    ('food', 'pork', 0.0121, 'tons/kg'),
+    ('food', 'chicken', 0.0069, 'tons/kg'),
+    ('food', 'fish', 0.0060, 'tons/kg'),
+    ('food', 'shrimp', 0.0120, 'tons/kg'),
+    ('food', 'eggs', 0.0045, 'tons/kg'),
+    ('food', 'cheese', 0.0135, 'tons/kg'),
+    ('food', 'milk', 0.0033, 'tons/kg'),
+    ('food', 'butter', 0.0120, 'tons/kg'),
+    ('food', 'yogurt', 0.0038, 'tons/kg'),
+    ('food', 'rice', 0.0040, 'tons/kg'),
+    ('food', 'bread', 0.0015, 'tons/kg'),
+    ('food', 'pasta', 0.0019, 'tons/kg'),
+    ('food', 'lentils', 0.0009, 'tons/kg'),
+    ('food', 'tofu', 0.0020, 'tons/kg'),
+    ('food', 'nuts', 0.0023, 'tons/kg'),
+    ('food', 'fruits', 0.0010, 'tons/kg'),
+    ('food', 'vegetables', 0.0020, 'tons/kg'),
+    ('food', 'chocolate', 0.0190, 'tons/kg'),
+    ('food', 'coffee', 0.0170, 'tons/kg'),
+    ('food', 'tea', 0.0034, 'tons/kg'),
+    ('food', 'juice', 0.0020, 'tons/kg'),
+    ('food', 'ice_cream', 0.0085, 'tons/kg'),
+    ('food', 'pizza', 0.0078, 'tons/kg'),
+    ('food', 'burger', 0.0140, 'tons/kg');
+    `);
+  }
+
+  // Migration: add new food factors to existing databases
+  const newFoodFactors: Array<{sub: string; factor: number}> = [
+    { sub: 'lamb', factor: 0.0245 }, { sub: 'pork', factor: 0.0121 },
+    { sub: 'shrimp', factor: 0.0120 }, { sub: 'eggs', factor: 0.0045 },
+    { sub: 'cheese', factor: 0.0135 }, { sub: 'milk', factor: 0.0033 },
+    { sub: 'butter', factor: 0.0120 }, { sub: 'yogurt', factor: 0.0038 },
+    { sub: 'rice', factor: 0.0040 }, { sub: 'bread', factor: 0.0015 },
+    { sub: 'pasta', factor: 0.0019 }, { sub: 'lentils', factor: 0.0009 },
+    { sub: 'tofu', factor: 0.0020 }, { sub: 'nuts', factor: 0.0023 },
+    { sub: 'fruits', factor: 0.0010 }, { sub: 'vegetables', factor: 0.0020 },
+    { sub: 'chocolate', factor: 0.0190 }, { sub: 'coffee', factor: 0.0170 },
+    { sub: 'tea', factor: 0.0034 }, { sub: 'juice', factor: 0.0020 },
+    { sub: 'ice_cream', factor: 0.0085 }, { sub: 'pizza', factor: 0.0078 },
+    { sub: 'burger', factor: 0.0140 },
+  ];
+  for (const f of newFoodFactors) {
+    const exists = await db.get(
+      'SELECT id FROM emission_factors WHERE category = ? AND subcategory = ?',
+      ['food', f.sub]
+    );
+    if (!exists) {
+      await db.run(
+        'INSERT INTO emission_factors(category, subcategory, factor, unit) VALUES (?, ?, ?, ?)',
+        ['food', f.sub, f.factor, 'tons/kg']
+      );
+    }
+  }
+
+  // Migration: update old per-meal food factors to per-kg
+  const oldMealFactors = [
+    { sub: 'beef', factor: 0.0270 },
+    { sub: 'chicken', factor: 0.0069 },
+    { sub: 'fish', factor: 0.0060 },
+  ];
+  for (const f of oldMealFactors) {
+    await db.run(
+      'UPDATE emission_factors SET factor = ?, unit = ? WHERE category = ? AND subcategory = ? AND unit = ?',
+      [f.factor, 'tons/kg', 'food', f.sub, 'tons/meal']
+    );
   }
 
   // Seed default recommendations if table is empty

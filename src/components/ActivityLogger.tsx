@@ -5,6 +5,65 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const KM_TO_MILES = 0.621371;
 
+const FOOD_GROUPS: { label: string; items: { value: string; label: string; emoji: string }[] }[] = [
+  {
+    label: '🥩 Meat & Seafood',
+    items: [
+      { value: 'beef', label: 'Beef', emoji: '🥩' },
+      { value: 'lamb', label: 'Lamb', emoji: '🐑' },
+      { value: 'pork', label: 'Pork', emoji: '🥓' },
+      { value: 'chicken', label: 'Chicken', emoji: '🍗' },
+      { value: 'fish', label: 'Fish', emoji: '🐟' },
+      { value: 'shrimp', label: 'Shrimp', emoji: '🦐' },
+    ],
+  },
+  {
+    label: '🧀 Dairy & Eggs',
+    items: [
+      { value: 'eggs', label: 'Eggs', emoji: '🥚' },
+      { value: 'cheese', label: 'Cheese', emoji: '🧀' },
+      { value: 'milk', label: 'Milk', emoji: '🥛' },
+      { value: 'butter', label: 'Butter', emoji: '🧈' },
+      { value: 'yogurt', label: 'Yogurt', emoji: '🥛' },
+    ],
+  },
+  {
+    label: '🌾 Grains & Staples',
+    items: [
+      { value: 'rice', label: 'Rice', emoji: '🍚' },
+      { value: 'bread', label: 'Bread', emoji: '🍞' },
+      { value: 'pasta', label: 'Pasta', emoji: '🍝' },
+    ],
+  },
+  {
+    label: '🥬 Plant-Based',
+    items: [
+      { value: 'lentils', label: 'Lentils / Beans', emoji: '🫘' },
+      { value: 'tofu', label: 'Tofu / Soy', emoji: '🧊' },
+      { value: 'nuts', label: 'Nuts', emoji: '🥜' },
+      { value: 'fruits', label: 'Fruits', emoji: '🍎' },
+      { value: 'vegetables', label: 'Vegetables', emoji: '🥬' },
+    ],
+  },
+  {
+    label: '☕ Beverages',
+    items: [
+      { value: 'coffee', label: 'Coffee', emoji: '☕' },
+      { value: 'tea', label: 'Tea', emoji: '🍵' },
+      { value: 'juice', label: 'Juice', emoji: '🧃' },
+    ],
+  },
+  {
+    label: '🍕 Prepared / Snacks',
+    items: [
+      { value: 'pizza', label: 'Pizza', emoji: '🍕' },
+      { value: 'burger', label: 'Burger', emoji: '🍔' },
+      { value: 'ice_cream', label: 'Ice Cream', emoji: '🍦' },
+      { value: 'chocolate', label: 'Chocolate', emoji: '🍫' },
+    ],
+  },
+];
+
 export const ActivityLogger: React.FC = () => {
   const { t: globalT } = useLanguage();
   const t = globalT.activity;
@@ -19,6 +78,7 @@ export const ActivityLogger: React.FC = () => {
     energy: '',
     lpg: '',
     meal: 'beef',
+    foodQuantity: '0.5',
     year: new Date().getFullYear().toString(),
     fuelType: 'petrol'
   });
@@ -85,8 +145,9 @@ export const ActivityLogger: React.FC = () => {
         const lpg = parseFloat(formData.lpg) || 0;
         return (lpg * getFactor('lpg', 'lpg')).toFixed(4);
       case 'food':
+        const quantity = parseFloat(formData.foodQuantity) || 0;
         const mealFactor = getFactor('food', formData.meal);
-        return mealFactor.toFixed(4);
+        return (quantity * mealFactor).toFixed(4);
       default:
         return '0';
     }
@@ -115,14 +176,14 @@ export const ActivityLogger: React.FC = () => {
           subcategory = 'lpg';
           break;
         case 'food':
-          value = 1;
+          value = parseFloat(formData.foodQuantity) || 0;
           subcategory = formData.meal;
           break;
       }
 
       const emissions = parseFloat(calculateEmissions());
 
-      if (value <= 0 && selectedCategory !== 'food') {
+      if (value <= 0) {
         throw new Error('Please enter a valid amount');
       }
 
@@ -141,6 +202,7 @@ export const ActivityLogger: React.FC = () => {
         distance: '',
         energy: '',
         lpg: '',
+        foodQuantity: '0.5',
         year: new Date().getFullYear().toString(),
         fuelType: 'petrol'
       }));
@@ -263,19 +325,88 @@ export const ActivityLogger: React.FC = () => {
         );
       case 'food':
         return (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t.mealType}</label>
-            <select
-              value={formData.meal}
-              onChange={(e) => handleInputChange('meal', e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            >
-              <option value="beef">Beef</option>
-              <option value="chicken">Chicken</option>
-              <option value="fish">Fish</option>
-              <option value="vegetarian">Vegetarian</option>
-              <option value="vegan">Vegan</option>
-            </select>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Select Food Item
+              </label>
+              <select
+                value={formData.meal}
+                onChange={(e) => handleInputChange('meal', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              >
+                {FOOD_GROUPS.map((group) => (
+                  <optgroup key={group.label} label={group.label}>
+                    {group.items.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.emoji} {item.label}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Quantity (kg)
+              </label>
+              <input
+                type="number"
+                value={formData.foodQuantity}
+                onChange={(e) => handleInputChange('foodQuantity', e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                placeholder="Enter quantity in kilograms"
+                min="0.01"
+                step="0.1"
+              />
+              <div className="mt-2 flex flex-wrap gap-2">
+                {[0.1, 0.25, 0.5, 1, 2, 5].map((qty) => (
+                  <button
+                    key={qty}
+                    type="button"
+                    onClick={() => handleInputChange('foodQuantity', qty.toString())}
+                    className={`px-3 py-1 text-xs font-medium rounded-full border transition-all duration-200 ${
+                      parseFloat(formData.foodQuantity) === qty
+                        ? 'bg-emerald-100 dark:bg-emerald-900/30 border-emerald-500 text-emerald-700 dark:text-emerald-400'
+                        : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:border-emerald-400 hover:text-emerald-600'
+                    }`}
+                  >
+                    {qty} kg
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {parseFloat(formData.foodQuantity) > 0 && (
+              <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                <div className="flex items-center space-x-2 mb-3">
+                  <UtensilsCrossed className="h-4 w-4 text-green-600 dark:text-green-400" />
+                  <span className="text-sm font-semibold text-green-800 dark:text-green-200">Food Emission Breakdown</span>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Food Item:</span>
+                    <span className="font-medium text-gray-900 dark:text-white capitalize">
+                      {formData.meal.replace('_', ' ')}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Quantity:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">
+                      {parseFloat(formData.foodQuantity).toFixed(2)} kg
+                    </span>
+                  </div>
+                  <hr className="border-green-200 dark:border-green-800" />
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">CO₂ Emissions:</span>
+                    <span className="font-bold text-emerald-700 dark:text-emerald-400">
+                      {calculateEmissions()} tons
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         );
       default:
