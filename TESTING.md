@@ -16,21 +16,21 @@ We verified the interaction between different layers of the application to ensur
 *   **Frontend-Backend Integration:** Tested that the React frontend correctly sends HTTP requests (GET, POST, PUT, DELETE) to the Express backend and correctly handles the returned JSON data or error messages.
 *   **Database Integration:** Ensured the Express server correctly executes SQLite queries for user creation, activity logging, and retrieving insights. Tested that transaction rollbacks occur correctly on failure.
 *   **Gemini AI Integration:** Verified that the API keys stored in local storage are correctly retrieved and utilized by the AI service to fetch contextual responses.
-*   **Geolocation & Storage:** Ensured the geolocation service correctly reads GPS coordinates and stores calculated travel segments securely in local storage before eventual syncing.
+
 
 ## 3. System Testing
 We tested complete, end-to-end workflows from the perspective of an end-user.
 
 *   **Complete User Journey:** Tested the flow of a user registering for an account, logging in, manually logging a transport activity, viewing the updated emission statistics on the dashboard, and logging out.
 *   **Admin Workflow:** Validated the admin role's ability to log in, view the list of all users, update emission factors in the database, and manage global recommendations.
-*   **Automated Travel Tracking:** Tested the background flow where the app automatically detects movement, calculates distance using the Haversine formula, determines the transport mode based on speed, and automatically logs the emission segment.
+
 
 ## 4. Performance Testing
 We evaluated how the system performs under load and its general responsiveness.
 
 *   **Concurrent Users:** Simulated multiple users accessing the dashboard and logging activities simultaneously to ensure the SQLite backend handles concurrent read/write operations without locking issues.
 *   **API Response Times:** Monitored the time taken by the backend to return insights and dashboard data, ensuring it meets the specified < 2 seconds page load requirement.
-*   **Resource Usage:** Checked the client-side memory and CPU usage, specifically ensuring the background GPS polling doesn't cause excessive battery drain on mobile devices.
+*   **Resource Usage:** Checked the client-side memory and CPU usage to ensure the application runs efficiently without causing excessive battery drain on mobile devices.
 
 ## 5. User Acceptance Testing (UAT)
 We allowed real users to test the system to collect feedback on usability.
