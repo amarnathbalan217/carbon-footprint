@@ -244,14 +244,20 @@ interface CarbonGoal {
 ## 12. Testing Specifications
 
 ### 12.1 Unit Testing
-- **Framework**: Vitest (planned)
-- **Coverage**: Component logic, utility functions
-- **Mocking**: Geolocation API, localStorage
+- **Coverage**: Authentication logic, API endpoints, AI Assistant integration, and emission calculation formulas.
+- **Mocking**: LocalStorage, external AI API endpoints.
 
 ### 12.2 Integration Testing
-- **User Flows**: Complete user journeys
-- **Cross-browser**: Automated browser testing
-- **Performance**: Load time and responsiveness testing
+- **Focus**: Frontend-backend HTTP communication, database execution (SQLite), and local storage data persistence.
+
+### 12.3 System Testing
+- **Focus**: End-to-end user journeys (registration to dashboard) and administrator workflows.
+
+### 12.4 Performance Testing
+- **Focus**: Handling concurrent database connections, maintaining API response times under 2 seconds, and efficient resource usage.
+
+### 12.5 User Acceptance Testing (UAT)
+- **Focus**: UI/UX usability feedback, language localization (English/Malayalam) accuracy, and cross-platform mobile functionality.
 
 ## 13. Maintenance & Support
 
