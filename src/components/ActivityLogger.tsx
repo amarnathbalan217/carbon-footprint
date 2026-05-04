@@ -324,6 +324,10 @@ export const ActivityLogger: React.FC = () => {
           </div>
         );
       case 'food':
+        const isDrink = ['coffee', 'tea', 'juice', 'milk'].includes(formData.meal);
+        const unit = isDrink ? 'liters' : 'kilograms';
+        const unitShort = isDrink ? 'L' : 'kg';
+
         return (
           <div className="space-y-4">
             <div>
@@ -349,14 +353,14 @@ export const ActivityLogger: React.FC = () => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Quantity (kg)
+                Quantity ({unitShort})
               </label>
               <input
                 type="number"
                 value={formData.foodQuantity}
                 onChange={(e) => handleInputChange('foodQuantity', e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                placeholder="Enter quantity in kilograms"
+                placeholder={`Enter quantity in ${unit}`}
                 min="0.01"
                 step="0.1"
               />
@@ -372,7 +376,7 @@ export const ActivityLogger: React.FC = () => {
                         : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:border-emerald-400 hover:text-emerald-600'
                     }`}
                   >
-                    {qty} kg
+                    {qty} {unitShort}
                   </button>
                 ))}
               </div>
@@ -394,7 +398,7 @@ export const ActivityLogger: React.FC = () => {
                   <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Quantity:</span>
                     <span className="font-medium text-gray-900 dark:text-white">
-                      {parseFloat(formData.foodQuantity).toFixed(2)} kg
+                      {parseFloat(formData.foodQuantity).toFixed(2)} {unitShort}
                     </span>
                   </div>
                   <hr className="border-green-200 dark:border-green-800" />

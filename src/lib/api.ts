@@ -1,4 +1,6 @@
-const API_URL = ' https://kathrin-paternal-goniometrically.ngrok-free.dev /api';
+const API_URL = window.location.port === '5173' || window.location.hostname === 'localhost' 
+    ? 'http://localhost:3002/api' 
+    : 'https://kathrin-paternal-goniometrically.ngrok-free.dev/api';
 
 const getHeaders = () => {
     const token = localStorage.getItem('token');
